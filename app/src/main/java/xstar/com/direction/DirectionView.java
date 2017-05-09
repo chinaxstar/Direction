@@ -46,8 +46,8 @@ public class DirectionView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         drawCircle(canvas, scale_len);
-        drawLittleTriangle(canvas, directAngle, scale_len);
-        drawDirectText(canvas, text);
+        drawLittleTriangle(canvas, scale_len);
+        drawDirectText(canvas, directAngle, text);
     }
 
     private void drawCircle(Canvas canvas, int len) {
@@ -77,7 +77,7 @@ public class DirectionView extends View {
         paint.setAlpha(100);//设置画笔透明度，最高值为255
     }
 
-    private void drawLittleTriangle(Canvas canvas, int angle, int triangle_len) {
+    private void drawLittleTriangle(Canvas canvas, int triangle_len) {
         paint.setStyle(Paint.Style.FILL);
         int width = canvas.getWidth();
         int height = canvas.getHeight();
@@ -85,20 +85,18 @@ public class DirectionView extends View {
         int half_h = height >> 1;
         int tl_half = triangle_len >> 1;
         int tl_height = (int) (tl_half * Math.pow(3, 0.5));
-        int radius = computeCircle(canvas, 2);//圆盘的半径
-        canvas.save();
-        canvas.rotate(angle, half_w, half_h);
-        int start_y = half_h - radius;
+        int radius = computeCircle(canvas, 1);
+        int start_y = half_h - radius - tl_height - space;
         Path path = new Path();
         path.moveTo(half_w, start_y);
         path.lineTo(half_w - tl_half, start_y + tl_height);
         path.lineTo(half_w + tl_half, start_y + tl_height);
         path.close();
         canvas.drawPath(path, paint);
-        canvas.restore();
     }
 
-    private void drawDirectText(Canvas canvas, String text) {
+    private void drawDirectText(Canvas canvas, int angle, String text) {
+        paint.setStyle(Paint.Style.FILL);
         int width = canvas.getWidth();
         int height = canvas.getHeight();
         int half_w = width >> 1;
@@ -107,7 +105,7 @@ public class DirectionView extends View {
         int radius = computeCircle(canvas, 3);
         for (int i = 0; i < 4; i++) {
             canvas.save();
-            canvas.rotate(i * 90, half_w, half_h);
+            canvas.rotate(i * 90 + angle, half_w, half_h);
             canvas.drawText(directs[i], 0, 1, half_w - (textSize / 2), half_h - radius + textSize, paint);
             canvas.restore();
         }
@@ -150,10 +148,8 @@ public class DirectionView extends View {
 
     private String getDirectDescription(int directAngle) {
         String text;
-        if (inRange(directAngle, 0, 10) && inRange(directAngle, 350, 360))
-            text = "正北";
-        else if (inRange(directAngle, 10, 80))
-            text = "东偏北";
+        if (inRange(directAngle, 0, 10) && inRange(directAngle, 350, 360)) text = "正北";
+        else if (inRange(directAngle, 10, 80)) text = "东偏北";
         else if (inRange(directAngle, 80, 100)) text = "正东";
         else if (inRange(directAngle, 100, 170)) text = "东偏南";
         else if (inRange(directAngle, 170, 190)) text = "正南";
@@ -183,7 +179,7 @@ public class DirectionView extends View {
                 break;
             case 2:
                 radius = computeCircle(canvas, 1);
-                radius -= (scale_len + space);
+//                radius -= (scale_len + space);
                 break;
             case 3:
                 radius = computeCircle(canvas, 2);
