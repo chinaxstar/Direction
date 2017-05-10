@@ -105,7 +105,7 @@ public class DirectionView extends View {
         int radius = computeCircle(canvas, 3);
         for (int i = 0; i < 4; i++) {
             canvas.save();
-            canvas.rotate(i * 90 + angle, half_w, half_h);
+            canvas.rotate(i * 90 - angle, half_w, half_h);
             canvas.drawText(directs[i], 0, 1, half_w - (textSize / 2), half_h - radius + textSize, paint);
             canvas.restore();
         }
@@ -148,7 +148,7 @@ public class DirectionView extends View {
 
     private String getDirectDescription(int directAngle) {
         String text;
-        if (inRange(directAngle, 0, 10) && inRange(directAngle, 350, 360)) text = "正北";
+        if (inRange(directAngle, 0, 10) || inRange(directAngle, 350, 360)) text = "正北";
         else if (inRange(directAngle, 10, 80)) text = "东偏北";
         else if (inRange(directAngle, 80, 100)) text = "正东";
         else if (inRange(directAngle, 100, 170)) text = "东偏南";

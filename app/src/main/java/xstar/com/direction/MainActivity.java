@@ -36,10 +36,9 @@ public class MainActivity extends AppCompatActivity {
         aSensor = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mSensor = sm.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 
-        sm.registerListener(myListener, aSensor, SensorManager.SENSOR_DELAY_NORMAL);
-        sm.registerListener(myListener, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        registerSensor();
         // 更新显示数据的方法
-		calculateOrientation();
+        calculateOrientation();
         // 116.402056,39.914334
         double latitude = 39.914334;
         double longitude = 116.402056;
@@ -75,8 +74,19 @@ public class MainActivity extends AppCompatActivity {
 
     // 再次强调：注意activity暂停的时候释放
     public void onPause() {
-        sm.unregisterListener(myListener);
         super.onPause();
+        sm.unregisterListener(myListener);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        registerSensor();
+    }
+
+    private void registerSensor() {
+        sm.registerListener(myListener, aSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        sm.registerListener(myListener, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     final SensorEventListener myListener = new SensorEventListener() {
@@ -108,25 +118,7 @@ public class MainActivity extends AppCompatActivity {
         // values[2] = (float) Math.toDegrees(values[2]);
         degress = values[0];
         if (degress < 0) degress = 360 + degress;
-        if (values[0] >= -5 && values[0] < 5) {
-            Log.i(TAG, "正北");
-        } else if (values[0] >= 5 && values[0] < 85) {
-            Log.i(TAG, "东北");
-        } else if (values[0] >= 85 && values[0] <= 95) {
-            Log.i(TAG, "正东");
-        } else if (values[0] >= 95 && values[0] < 175) {
-            Log.i(TAG, "东南");
-        } else if ((values[0] >= 175 && values[0] <= 180) || (values[0]) >= -180 && values[0] < -175) {
-            Log.i(TAG, "正南");
-        } else if (values[0] >= -175 && values[0] < -95) {
-            Log.i(TAG, "西南");
-        } else if (values[0] >= -95 && values[0] < -85) {
-            Log.i(TAG, "正西");
-        } else if (values[0] >= -85 && values[0] < -5) {
-            Log.i(TAG, "西北");
-        }
         Log.i(TAG, String.format("degress:%.2f", values[0]));
-//		dv.setRotation(-values[0]);
     }
 
     Handler handler = new Handler() {
@@ -141,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
+
 
     @Override
     protected void onDestroy() {
