@@ -14,4 +14,11 @@
         android:layout_centerInParent="true"
         android:background="#139c57"
         />
+
+    <Button
+        android:id="@+id/sun_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:text="太阳法"/>
 </RelativeLayout>

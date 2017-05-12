@@ -1,6 +1,7 @@
 package xstar.com.direction;
 
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -10,10 +11,12 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import java.util.Calendar;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     private SensorManager sm;
     // 需要两个Sensor
@@ -26,12 +29,14 @@ public class MainActivity extends AppCompatActivity {
 
     DirectionView dv;
 
+    Button sun_btn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         dv = (DirectionView) findViewById(R.id.dv);
-
+        sun_btn = (Button) findViewById(R.id.sun_btn);
+        sun_btn.setOnClickListener(this);
         sm = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         registerSensor();
         // 更新显示数据的方法
@@ -65,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
 
     final SensorEventListener myListener = new SensorEventListener() {
         public void onSensorChanged(SensorEvent sensorEvent) {
-
             if (sensorEvent.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
                 magneticFieldValues = sensorEvent.values;
             if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
@@ -143,5 +147,11 @@ public class MainActivity extends AppCompatActivity {
         System.out.println("太阳方位角:" + solarazimuth);
         System.out.println("太阳海拔:" + solarelevation);
         System.out.println("太阳位置:" + solarposition[0] + "/" + solarposition[1]);
+    }
+
+    @Override
+    public void onClick(View v) {
+        startActivity(new Intent(this,BySunAndClockActivity.class));
+        finish();
     }
 }
