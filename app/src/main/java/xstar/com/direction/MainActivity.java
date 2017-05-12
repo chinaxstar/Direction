@@ -39,35 +39,11 @@ public class MainActivity extends AppCompatActivity {
         registerSensor();
         // 更新显示数据的方法
         calculateOrientation();
-        // 116.402056,39.914334
-        double latitude = 39.914334;
-        double longitude = 116.402056;
-        int year = 2016;
-        int month = 12;
-        int day = 12;
-        int timezone = 8;
-        int dlstime = 0;// 夏令时
-        SunCalc sunCalc = new SunCalc();
-        double sunset = sunCalc.sunset(latitude, longitude, year, month, day, timezone, dlstime);
-        System.out.println("sunset:" + sunset);
-        System.out.println("天文学黎明dawn:" + sunCalc.dawn(latitude, longitude, year, month, day, timezone, dlstime, 18) * 24);
-        System.out.println("航海黎明dawn:" + sunCalc.dawn(latitude, longitude, year, month, day, timezone, dlstime, 12) * 24);
-        System.out.println("民事黎明dawn:" + sunCalc.dawn(latitude, longitude, year, month, day, timezone, dlstime, 6) * 24);
-        System.out.println("日出:" + sunCalc.sunrise(latitude, longitude, year, month, day, timezone, dlstime) * 24);
-        System.out.println("日中:" + sunCalc.solarnoon(latitude, longitude, year, month, day, timezone, dlstime) * 24);
-        System.out.println("日落:" + sunCalc.sunset(latitude, longitude, year, month, day, timezone, dlstime) * 24);
-        System.out.println("民事黄昏:" + sunCalc.dusk(latitude, longitude, year, month, day, timezone, dlstime, 6) * 24);
-        System.out.println("航海黄昏:" + sunCalc.dusk(latitude, longitude, year, month, day, timezone, dlstime, 12) * 24);
-        System.out.println("天文学黄昏:" + sunCalc.dusk(latitude, longitude, year, month, day, timezone, dlstime, 18) * 24);
-        // 2:03 太阳天文黎明 民事黎明相差12个角度
-        double solarazimuth = sunCalc.solarazimuth(latitude, longitude, year, month, day, 14, 12, 0, timezone, dlstime);// 太阳方位角
-        double solarelevation = sunCalc.solarelevation(latitude, longitude, year, month, day, 14, 12, 0, timezone, dlstime);// 太阳海拔
-        double[] solarposition = sunCalc.solarposition(latitude, longitude, year, month, day, 14, 12, 0, timezone, dlstime);
-        System.out.println("太阳方位角:" + solarazimuth);
-        System.out.println("太阳海拔:" + solarelevation);
-        System.out.println("太阳位置:" + solarposition[0] + "/" + solarposition[1]);
+        sunLocation();
         handler.sendEmptyMessageDelayed(MSG_WHAT, MSG_DELAY);
     }
+
+
 
     private static final int MSG_WHAT = 100;
     private static final int MSG_DELAY = 500;
@@ -139,5 +115,35 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         handler.removeMessages(MSG_WHAT);
+    }
+
+    private void sunLocation(){
+        // 116.402056,39.914334
+        double latitude = 39.914334;
+        double longitude = 116.402056;
+        int year = 2016;
+        int month = 12;
+        int day = 12;
+        int timezone = 8;
+        int dlstime = 0;// 夏令时
+        SunCalc sunCalc = new SunCalc();
+        double sunset = sunCalc.sunset(latitude, longitude, year, month, day, timezone, dlstime);
+        System.out.println("sunset:" + sunset);
+        System.out.println("天文学黎明dawn:" + sunCalc.dawn(latitude, longitude, year, month, day, timezone, dlstime, 18) * 24);
+        System.out.println("航海黎明dawn:" + sunCalc.dawn(latitude, longitude, year, month, day, timezone, dlstime, 12) * 24);
+        System.out.println("民事黎明dawn:" + sunCalc.dawn(latitude, longitude, year, month, day, timezone, dlstime, 6) * 24);
+        System.out.println("日出:" + sunCalc.sunrise(latitude, longitude, year, month, day, timezone, dlstime) * 24);
+        System.out.println("日中:" + sunCalc.solarnoon(latitude, longitude, year, month, day, timezone, dlstime) * 24);
+        System.out.println("日落:" + sunCalc.sunset(latitude, longitude, year, month, day, timezone, dlstime) * 24);
+        System.out.println("民事黄昏:" + sunCalc.dusk(latitude, longitude, year, month, day, timezone, dlstime, 6) * 24);
+        System.out.println("航海黄昏:" + sunCalc.dusk(latitude, longitude, year, month, day, timezone, dlstime, 12) * 24);
+        System.out.println("天文学黄昏:" + sunCalc.dusk(latitude, longitude, year, month, day, timezone, dlstime, 18) * 24);
+        // 2:03 太阳天文黎明 民事黎明相差12个角度
+        double solarazimuth = sunCalc.solarazimuth(latitude, longitude, year, month, day, 14, 12, 0, timezone, dlstime);// 太阳方位角
+        double solarelevation = sunCalc.solarelevation(latitude, longitude, year, month, day, 14, 12, 0, timezone, dlstime);// 太阳海拔
+        double[] solarposition = sunCalc.solarposition(latitude, longitude, year, month, day, 14, 12, 0, timezone, dlstime);
+        System.out.println("太阳方位角:" + solarazimuth);
+        System.out.println("太阳海拔:" + solarelevation);
+        System.out.println("太阳位置:" + solarposition[0] + "/" + solarposition[1]);
     }
 }
