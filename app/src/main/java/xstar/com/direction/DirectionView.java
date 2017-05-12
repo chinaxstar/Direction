@@ -62,8 +62,22 @@ public class DirectionView extends View {
             canvas.save();
             //让画布旋转3/5度，参数一是需要旋转的度数，参数2,3是旋转的圆心
             canvas.rotate(i, half_w, half_h);
+
+            int l = len;
+            if (i % 15 == 0 && i % 30 != 0 && i % 90 != 0) {
+                l = 2 * len;
+                paint.setStrokeWidth(2);
+            } else if (i % 15 == 0 && i % 90 != 0) {
+                l = 3 * len;
+                paint.setStrokeWidth(2);
+            } else if (i % 90 == 0) {
+                l = 4 * len;
+                paint.setStrokeWidth(3);
+            } else {
+                paint.setStrokeWidth(2);
+            }
             //旋转后再圆上画上一长10dp的刻度线
-            canvas.drawLine(half_w, half_h - radius, half_w, half_h - radius + len, paint);
+            canvas.drawLine(half_w, half_h - radius, half_w, half_h - radius + l, paint);
             //恢复画布
             canvas.restore();
         }
@@ -113,9 +127,7 @@ public class DirectionView extends View {
         Rect textR = new Rect();
         paint.setTextSize(textSize);
         paint.getTextBounds(text, 0, text.length(), textR);
-        canvas.drawText(text, 0, text.length(), half_w - (textR.width() / 2), half_h - (textR.height() / 2), paint);
-        half_h += textR.height();
-//        drawAngleInfo(directAngle, canvas, half_w, half_h);
+        canvas.drawText(text, 0, text.length(), half_w - (textR.width() / 2), half_h + (textR.height() / 2), paint);
     }
 
     private void drawAngleInfo(int angle, Canvas canvas, int cx, int cy) {
@@ -182,8 +194,8 @@ public class DirectionView extends View {
 //                radius -= (scale_len + space);
                 break;
             case 3:
-                radius = computeCircle(canvas, 2);
-                radius -= ((scale_len / 2 * Math.pow(3, 0.5)) + space);
+                radius = computeCircle(canvas, 1);
+                radius -= (scale_len * 4 + space);
                 break;
             case 4:
                 radius = computeCircle(canvas, 3);

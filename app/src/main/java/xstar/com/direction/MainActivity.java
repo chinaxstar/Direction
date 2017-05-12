@@ -33,16 +33,12 @@ public class MainActivity extends AppCompatActivity {
         dv = (DirectionView) findViewById(R.id.dv);
 
         sm = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        aSensor = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        mSensor = sm.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-
         registerSensor();
         // 更新显示数据的方法
         calculateOrientation();
         sunLocation();
         handler.sendEmptyMessageDelayed(MSG_WHAT, MSG_DELAY);
     }
-
 
 
     private static final int MSG_WHAT = 100;
@@ -61,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void registerSensor() {
+        aSensor = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mSensor = sm.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         sm.registerListener(myListener, aSensor, SensorManager.SENSOR_DELAY_NORMAL);
         sm.registerListener(myListener, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
     }
@@ -117,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
         handler.removeMessages(MSG_WHAT);
     }
 
-    private void sunLocation(){
+    private void sunLocation() {
         // 116.402056,39.914334
         double latitude = 39.914334;
         double longitude = 116.402056;

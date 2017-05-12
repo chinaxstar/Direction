@@ -40,7 +40,7 @@ public class ClockDirectionView extends View {
     }
 
     Paint paint = new Paint();
-    private int scale_len = 35;
+    private int scale_len = 10;
     private int space = 8;
     private int textSize = 25;
 
@@ -48,7 +48,6 @@ public class ClockDirectionView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         drawCircle(canvas, scale_len);
-        drawNorthAndSouth(canvas, scale_len);
         drawDirectText(canvas);
         drawArrow(canvas, scale_len);
         drawSunArrow(canvas, scale_len, new Date());
@@ -105,14 +104,27 @@ public class ClockDirectionView extends View {
         int height = canvas.getHeight();
         int half_w = width >> 1;
         int half_h = height >> 1;
-        float radius = half_w - 20;//圆盘的半径
+        float radius = computeCircle(canvas, 1);//圆盘的半径
         for (int i = 0; i < 360; i++) {
             //画刻度之前，先把画布的状态保存下来
             canvas.save();
             //让画布旋转3/5度，参数一是需要旋转的度数，参数2,3是旋转的圆心
             canvas.rotate(i, half_w, half_h);
             //旋转后再圆上画上一长10dp的刻度线
-            canvas.drawLine(half_w, half_h - radius, half_w, half_h - radius + len, paint);
+            int l = len;
+            if (i % 15 == 0 && i % 30 != 0 && i % 90 != 0) {
+                l = 2 * len;
+                paint.setStrokeWidth(2);
+            } else if (i % 15 == 0 && i % 90 != 0) {
+                l = 3 * len;
+                paint.setStrokeWidth(2);
+            } else if (i % 90 == 0) {
+                l = 4 * len;
+                paint.setStrokeWidth(3);
+            } else {
+                paint.setStrokeWidth(2);
+            }
+            canvas.drawLine(half_w, half_h - radius, half_w, half_h - radius + l, paint);
             //恢复画布
             canvas.restore();
         }
@@ -130,20 +142,6 @@ public class ClockDirectionView extends View {
         int start_y = half_h - radius;
         drawArrow(canvas, 0, half_w, start_y, tl_height, scale_len, radius, paint);
         drawArrow(canvas, 180, half_w, start_y, tl_height, scale_len, radius, paint);
-    }
-
-    private void drawNorthAndSouth(Canvas canvas, int len) {
-        initClockCrudePaint();
-        int width = canvas.getWidth();
-        int height = canvas.getHeight();
-        int half_w = width >> 1;
-        int half_h = height >> 1;
-        float radius = half_w - 20;//圆盘的半径
-        canvas.drawLine(half_w, half_h - radius, half_w, half_h - radius + len * 2, paint);
-        canvas.save();
-        canvas.rotate(180, half_w, half_h);
-        canvas.drawLine(half_w, half_h - radius, half_w, half_h - radius + len * 2, paint);
-        canvas.restore();
     }
 
     private void initClockPaint() {
@@ -170,11 +168,12 @@ public class ClockDirectionView extends View {
         int half_w = width >> 1;
         int half_h = height >> 1;
         int radius = computeCircle(canvas, 0);
-        canvas.drawText(directs[0], 0, 1, half_w - (textSize / 2), half_h - radius + textSize, paint);
-        canvas.save();
-        canvas.rotate(180, half_w, half_h);
-        canvas.drawText(directs[2], 0, 1, half_w - (textSize / 2), half_h - radius + textSize, paint);
-        canvas.restore();
+        for (int i = 0; i < directs.length; i++) {
+            canvas.save();
+            canvas.rotate(i * 90, half_w, half_h);
+            canvas.drawText(directs[i], 0, 1, half_w - (textSize / 2), half_h - radius, paint);
+            canvas.restore();
+        }
     }
 
     public int getScale_len() {
@@ -202,14 +201,14 @@ public class ClockDirectionView extends View {
         switch (floor) {
             case 0:
                 radius = computeCircle(canvas, 1);
-                radius += textSize + space;
+                radius += space;
                 break;
             case 1:
-                radius = half_w - 20;//圆盘的半径
+                radius = (int) (half_w * 0.75f);//圆盘的半径
                 break;
             case 2:
                 radius = computeCircle(canvas, 1);
-                radius -= (scale_len * 2 + space);
+                radius -= (scale_len * 4 + space);
                 break;
             case 3:
                 radius = computeCircle(canvas, 2);

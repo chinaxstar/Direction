@@ -12,6 +12,6 @@ public class BySunAndClockActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_by_sun_and_clock);
         cdv = (ClockDirectionView) findViewById(R.id.cdv);
-        cdv.setScale_len(50);
+        cdv.setScale_len(20);
     }
 }
