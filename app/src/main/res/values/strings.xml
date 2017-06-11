@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Direction</string>
+    <string-array name="functions">
+        <item>综合</item>
+        <item>指向</item>
+        <item>太阳定向</item>
+    </string-array>
 </resources>

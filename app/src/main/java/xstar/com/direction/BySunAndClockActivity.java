@@ -26,7 +26,7 @@ public class BySunAndClockActivity extends AppCompatActivity implements View.OnC
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.back_btn:
-                startActivity(new Intent(this, MainActivity.class));
+                startActivity(new Intent(this, GuideActivity.class));
                 finish();
                 break;
         }
