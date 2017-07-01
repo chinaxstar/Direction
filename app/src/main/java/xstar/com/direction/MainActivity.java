@@ -1,17 +1,18 @@
 package xstar.com.direction;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import xstar.com.direction.databinding.ActivityMain2Binding;
+import xstar.com.direction.opengl.MainRender;
 import xstar.com.library.commons.recyclerutil.ObjAdapter;
 import xstar.com.library.commons.recyclerutil.RvBuilder;
 import xstar.com.library.commons.recyclerutil.SimpleAdapter;
@@ -20,6 +21,7 @@ import xstar.com.library.commons.recyclerutil.SimpleHolder;
 public class MainActivity extends AppCompatActivity {
 
     ActivityMain2Binding main2Binding;
+    MainRender mainRender=new MainRender();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         RvBuilder.Builder().setAdapter(simpleAdapter).build(main2Binding.functions);
+        mainRender.setGlSurfaceView(main2Binding.glMain);
+        main2Binding.glMain.setRenderer(mainRender);
     }
 
     private SimpleAdapter<String> simpleAdapter = new SimpleAdapter<String>() {
@@ -64,4 +68,21 @@ public class MainActivity extends AppCompatActivity {
             });
         }
     };
+
+    public boolean isSupportEs2(){
+        ActivityManager activityManager= (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+        return         activityManager.getDeviceConfigurationInfo().reqGlEsVersion>=0x2000;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (main2Binding.glMain!=null)main2Binding.glMain.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (main2Binding.glMain!=null)main2Binding.glMain.onResume();
+    }
 }
